@@ -74,7 +74,40 @@ margin-top: 20px;
 <footer>
 &copy; 2025 My Project Website | Made with ❤️ and Colors
 </footer>
+<h2>🤖 My AI Man</h2>
+<div id="chatbox" style="border:1px solid #ccc; padding:10px; height:250px; overflow-y:auto;"></div>
+<input id="userInput" type="text" placeholder="Ask me something..." />
+<button onclick="askAI()">Send</button>
 
+<script>
+async function askAI() {
+  const input = document.getElementById("userInput");
+  const chatbox = document.getElementById("chatbox");
+
+  chatbox.innerHTML += <div><b>You:</b> ${input.value}</div>;
+
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer sk-xxxxxxxxxxxx" // 👈 paste your API key here
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: input.value }]
+    })
+  });
+
+  const data = await res.json();
+  const reply = data.choices[0].message.content;
+
+  chatbox.innerHTML += <div><b>AI:</b> ${reply}</div>;
+
+  input.value = "";
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+</script>
 
 </body>
+
 </html>
